@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_BOOKS 100
+
+struct Book {
+    char udk[20];
+    char author[50];
+    char title[100];
+    int year;
+    int copies;
+};
+
+struct Book library[MAX_BOOKS];
+int numBooks = 0;
+
+int main() {
+    int choice;
+    do {
+        printf("\nВыберите действие:\n");
+        printf("1. Добавить книгу\n");
+        printf("2. Взять книгу\n");
+        printf("3. Вернуть книгу\n");
+        printf("4. Информация о книге\n");
+        printf("5. Выход\n");
+        printf("Ваш выбор: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: {
+                struct Book newBook;
+                printf("Введите номер УДК: ");
+                scanf("%s", newBook.udk);
+                printf("Введите фамилию и инициалы автора: ");
+                scanf("%s", newBook.author);
+                printf("Введите название книги: ");
+                scanf("%s", newBook.title);
+                printf("Введите год издания: ");
+                scanf("%d", &newBook.year);
+                printf("Введите количество экземпляров: ");
+                scanf("%d", &newBook.copies);
+
+                library[numBooks++] = newBook;
+                break;
+            }
+            case 2: {
+                char udk[20];
+                printf("Введите номер УДК книги для выдачи: ");
+                scanf("%s", udk);
+
+                int found = 0;
+                for (int i = 0; i < numBooks; i++) {
+                    if (strcmp(udk, library[i].udk) == 0) {
+                        if (library[i].copies > 0) {
+                            library[i].copies--;
+                            printf("Книга успешно выдана.\n");
+                        } else {
+                            printf("Книги с таким номером УДК нет в наличии.\n");
+                        }
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    printf("Книги с таким номером УДК не существует.\n");
+                }
+                break;
+            }
+            case 3: {
+                char udk[20];
+                printf("Введите номер УДК книги для возврата: ");
+                scanf("%s", udk);
+
+                int found = 0;
+                for (int i = 0; i < numBooks; i++) {
+                    if (strcmp(udk, library[i].udk) == 0) {
+                        library[i].copies++;
+                        printf("Книга успешно возвращена.\n");
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    printf("Книги с таким номером УДК не существует.\n");
+                }
+                break;
+            }
+            case 4: {
+                char udk[20];
+                printf("Введите номер УДК книги для поиска информации: ");
+                scanf("%s", udk);
+
+                int found = 0;
+                for (int i = 0; i < numBooks; i++) {
+                    if (strcmp(udk, library[i].udk) == 0) {
+                        printf("Номер УДК: %s\n", library[i].udk);
+                        printf("Автор: %s\n", library[i].author);
+                        printf("Название: %s\n", library[i].title);
+                        printf("Год издания: %d\n", library[i].year);
+                        printf("Количество экземпляров: %d\n", library[i].copies);
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    printf("Книги с таким номером УДК не существует.\n");
+                }
+                break;
+            }
+            case 5:
+                printf("Программа завершена.\n");
+                break;
+            default:
+                printf("Некорректный ввод. Попробуйте еще раз.\n");
+                break;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
